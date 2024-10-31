@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.7.0/dist/css/uikit.min.css" />
+    <meta charset="UTF-8">
+    <style>
+        .uk-container {
+            margin-bottom: 20px;
+        }
+
+        .uk-card-default {
+            background: #fff;
+            color: #666;
+            box-shadow:0 0 10px 0 rgba(0, 0, 0, 0.15);border:0;
+        }
+    </style>
+    <title>《崩坏：星穹铁道》v2.6 拆解案</title>
+</head>
+<body>
+<nav style="background-color: #39f;" class="uk-navbar-container uk-margin-bottom" uk-navbar="top: 200">
+    <div class="uk-navbar-left">
+        <img class="uk-logo uk-margin-left" src="https://s3.cn-north-1.amazonaws.com.cn/assets.xmind.cn/www/assets/images/xmind-logo-dark-66e9bc4b67.svg" alt="">
+        <ul class="uk-navbar-nav">
+            <li>
+                <a href="#" style="color: #fff">
+                    <span class="uk-icon uk-margin-small-right" uk-icon="icon: star"></span>
+                    《崩坏：星穹铁道》v2.6 拆解案
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="uk-navbar-right">
+        <iframe
+                src="https://ghbtns.com/github-btn.html?user=danielsss&repo=embed-viewer&type=star&count=true"
+                frameborder="0" scrolling="0" width="150" height="20" title="GitHub"
+        ></iframe>
+    </div>
+</nav>
+
+<div class="uk-section">
+    <div class="uk-container">
+        <button id="home" class="uk-button uk-button-default uk-button-small" onclick="onClickTop()">
+            <span class="uk-icon" uk-icon="icon: home"></span>
+        </button>
+    </div>
+    <div class="uk-container">
+        <hr>
+    </div>
+    <div id="ctx" class="uk-container"></div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.7.0/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.7.0/dist/js/uikit-icons.min.js"></script>
+<script type="application/javascript">
+    const state = {
+        data: JSON.parse('[{"isDir":true,"name":"docs","hash":"a7f328d69578131614ec5bd49a7c1760","values":[{"isDir":false,"isInclude":true,"name":"星铁V2.6系统拆解与分析.xmind","hash":"f83e988492ec62848de2b8944420053c"}]}]'),
+        child: {}
+    };
+
+    const onClickTop = function() {
+      state.child = {};
+      render();
+    }
+
+
+    const createFile = function(data) {
+        const div = document.createElement('div');
+        const h3 = document.createElement('h3');
+        const span = document.createElement('span');
+        const a = document.createElement('a');
+        div.className = 'uk-card uk-card-default uk-height-small uk-card-body uk-text-center';
+        h3.className = 'uk-card-title';
+        span.setAttribute('uk-icon', 'icon: file-pdf; ratio: 2.5');
+
+        a.href = data.hash + '.html';
+        a.onclick = () => {};
+        const name = data.name.includes('.') ? data.name.split('.')[0] : data.name;
+        a.append(`FILE: ${name}`);
+        a.className = 'uk-link-muted .uk-text-truncate';
+        h3.prepend(span);
+        div.prepend(h3);
+        div.append(a);
+        return div;
+    }
+
+    const createFolder = function(data) {
+        const div = document.createElement('div');
+        const h3 = document.createElement('h3');
+        const span = document.createElement('span');
+        const a = document.createElement('a');
+        div.className = 'uk-card uk-card-default uk-height-small uk-card-body uk-text-center';
+        h3.className = 'uk-card-title';
+
+        span.setAttribute('uk-icon', 'icon: folder; ratio: 2.5');
+
+        a.href = '#';
+        a.onclick = () => {
+            render(state.child[data.name]);
+        };
+        a.append(`FOLDER: ${data.name}`);
+        a.className = 'uk-link-muted .uk-text-truncate';
+
+        h3.prepend(span);
+        div.prepend(h3);
+        div.append(a);
+        return div;
+    }
+
+    const render = function(data = []) {
+        const ctx = document.getElementById('ctx');
+        ctx.innerHTML = '';
+        data = data.length > 0 ? data : state.data;
+        if (data.length > 0) {
+            const ul = document.createElement('ul');
+            ul.className = 'uk-grid-small uk-child-width-1-2 uk-child-width-1-4@s';
+            ul.id = 'list';
+            ul.setAttribute('uk-sortable', 'handle: .uk-card');
+            ul.setAttribute('uk-grid', '');
+            ul.setAttribute('uk-scrollspy', 'cls: uk-animation-fade; target: .uk-card; delay: 100; repeat: true');
+            for (const d of data) {
+                const li = document.createElement('li');
+                if (d.isDir === true) {
+                    li.appendChild(createFolder(d));
+                    state.child[d.name] = d.values;
+                } else {
+                    li.appendChild(createFile(d));
+                }
+                ul.appendChild(li);
+            }
+            ctx.appendChild(ul);
+        }
+    }
+
+    window.state = state;
+    render();
+</script>
+</html>
